@@ -619,7 +619,7 @@ bool AssetManager::appendPathToResTable(const asset_path& ap) const {
     size_t nextEntryIdx = mResources->getTableCount();
     ALOGV("Looking for resource asset in '%s'\n", ap.path.string());
     if (ap.type != kFileTypeDirectory) {
-        if (nextEntryIdx == 0) {
+        if (*entryIdx == 0) {
             // The first item is typically the framework resources,
             // which we want to avoid parsing every time.
             sharedRes = const_cast<AssetManager*>(this)->
@@ -650,7 +650,7 @@ bool AssetManager::appendPathToResTable(const asset_path& ap) const {
                 // can quickly copy it out for others.
                 ALOGV("Creating shared resources for %s", ap.path.string());
                 sharedRes = new ResTable();
-                sharedRes->add(ass, idmap, nextEntryIdx + 1, false);
+                sharedRes->add(ass, idmap, *entryIdx + 1, false);
 #ifdef HAVE_ANDROID_OS
                 const char* data = getenv("ANDROID_DATA");
                 LOG_ALWAYS_FATAL_IF(data == NULL, "ANDROID_DATA not set");
@@ -679,7 +679,7 @@ bool AssetManager::appendPathToResTable(const asset_path& ap) const {
             mResources->add(sharedRes);
         } else {
             ALOGV("Parsing resources for %s", ap.path.string());
-            mResources->add(ass, idmap, nextEntryIdx + 1, !shared);
+            mResources->add(ass, idmap, *entryIdx + 1, !shared);
         }
         onlyEmptyResources = false;
 

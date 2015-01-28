@@ -1507,6 +1507,7 @@ public final class ActivityManagerService extends ActivityManagerNative
             } break;
             case SHOW_UID_ERROR_MSG: {
                 if (mShowDialogs) {
+                    // XXX This is a temporary dialog, no need to localize.
                     AlertDialog d = new BaseErrorDialog(mContext);
                     d.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
                     d.setCancelable(false);

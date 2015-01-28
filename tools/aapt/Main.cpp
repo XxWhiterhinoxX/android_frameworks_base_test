@@ -14,6 +14,7 @@
 #include <cstdlib>
 #include <getopt.h>
 #include <cassert>
+#include <assert.h>
 
 using namespace android;
 

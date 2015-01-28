@@ -6061,10 +6061,7 @@ status_t ResTable::createIdmap(const ResTable& overlay,
     *outSize += 2 * sizeof(uint16_t);
 
     // overlay packages are assumed to contain only one package group
-    const ResTable_package* overlayPackageStruct = overlay.mPackageGroups[0]->packages[0]->package;
-    char16_t tmpName[sizeof(overlayPackageStruct->name)/sizeof(overlayPackageStruct->name[0])];
-    strcpy16_dtoh(tmpName, overlayPackageStruct->name, sizeof(overlayPackageStruct->name)/sizeof(overlayPackageStruct->name[0]));
-    const String16 overlayPackage(tmpName);
+    const String16 overlayPackage(overlay.mPackageGroups[0]->packages[0]->package->name);
 
     for (size_t typeIndex = 0; typeIndex < pg->types.size(); ++typeIndex) {
         const TypeList& typeList = pg->types[typeIndex];
@@ -6115,14 +6112,21 @@ status_t ResTable::createIdmap(const ResTable& overlay,
             }
 
             if (typeMap.entryOffset + typeMap.entryMap.size() < entryIndex) {
-                // pad with 0xffffffff's (indicating non-existing entries) before adding this entry
-                size_t index = typeMap.entryMap.size();
-                size_t numItems = entryIndex - (typeMap.entryOffset + index);
-                if (typeMap.entryMap.insertAt(0xffffffff, index, numItems) < 0) {
+                // Resize to accomodate this entry and the 0's in between.
+                const size_t oldSize = typeMap.entryMap.size();
+                if (typeMap.entryMap.resize((entryIndex - typeMap.entryOffset) + 1) < 0) {
                     return NO_MEMORY;
                 }
+                const size_t newSize = typeMap.entryMap.size();
+                for (size_t i = oldSize; i < newSize; ++i) {
+                    // As this entry is not present in this idmap, so init the item as 0xffffffff.
+                    // Please refer to the function IdmapEntries.lookup().
+                    typeMap.entryMap.editItemAt(i) = 0xffffffff;
+                }
+                typeMap.entryMap.editTop() = Res_GETENTRY(overlayResID);
+            } else {
+                typeMap.entryMap.add(Res_GETENTRY(overlayResID));
             }
-            typeMap.entryMap.add(Res_GETENTRY(overlayResID));
         }
 
         if (!typeMap.entryMap.isEmpty()) {

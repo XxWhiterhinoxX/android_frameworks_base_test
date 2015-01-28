@@ -1090,6 +1090,13 @@ public class WallpaperManager {
     }
 
     /**
+     * @hide
+     */
+    public void clearKeyguardWallpaper() {
+        sGlobals.clearKeyguardWallpaper();
+    }
+
+    /**
      * Open stream representing the default static image wallpaper.
      *
      * @hide

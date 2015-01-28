@@ -105,6 +105,14 @@ include $(BUILD_HOST_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := aapt
+
+LOCAL_SRC_FILES := $(aaptMain)
+
+LOCAL_STATIC_LIBRARIES += \
+    libaapt \
+    $(aaptHostStaticLibs)
+
+LOCAL_LDLIBS += $(aaptHostLdLibs)
 LOCAL_CFLAGS += $(aaptCFlags)
 LOCAL_CPPFLAGS += $(aaptCppFlags)
 LOCAL_LDLIBS += $(aaptHostLdLibs)
@@ -125,7 +133,13 @@ LOCAL_CPPFLAGS += $(aaptCppFlags)
 LOCAL_LDLIBS += $(aaptHostLdLibs)
 LOCAL_SRC_FILES += $(aaptTests)
 LOCAL_C_INCLUDES += $(LOCAL_PATH)
-LOCAL_STATIC_LIBRARIES += libaapt $(aaptHostStaticLibs)
+
+LOCAL_STATIC_LIBRARIES += \
+    libaapt \
+    $(aaptHostStaticLibs)
+
+LOCAL_LDLIBS += $(aaptHostLdLibs)
+LOCAL_CFLAGS += $(aaptCFlags)
 
 include $(BUILD_HOST_NATIVE_TEST)
 

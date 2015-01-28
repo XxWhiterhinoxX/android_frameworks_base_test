@@ -1102,7 +1102,7 @@ static jboolean android_content_AssetManager_resolveAttrs(JNIEnv* env, jobject c
     const ResTable::bag_entry* defStyleStart = NULL;
     uint32_t defStyleTypeSetFlags = 0;
     ssize_t bagOff = defStyleRes != 0
-            ? res.getBagLocked(defStyleRes, &defStyleStart, &defStyleTypeSetFlags) : -1;
+            ? res.getBagLocked(defStyleRes, &defStyleEnt, &defStyleTypeSetFlags) : -1;
     defStyleTypeSetFlags |= defStyleBagTypeSetFlags;
     const ResTable::bag_entry* const defStyleEnd = defStyleStart + (bagOff >= 0 ? bagOff : 0);
     BagAttributeFinder defStyleAttrFinder(defStyleStart, defStyleEnd);
@@ -1307,7 +1307,7 @@ static jboolean android_content_AssetManager_applyStyle(JNIEnv* env, jobject cla
     const ResTable::bag_entry* defStyleAttrStart = NULL;
     uint32_t defStyleTypeSetFlags = 0;
     ssize_t bagOff = defStyleRes != 0
-            ? res.getBagLocked(defStyleRes, &defStyleAttrStart, &defStyleTypeSetFlags) : -1;
+            ? res.getBagLocked(defStyleRes, &defStyleEnt, &defStyleTypeSetFlags) : -1;
     defStyleTypeSetFlags |= defStyleBagTypeSetFlags;
     const ResTable::bag_entry* const defStyleAttrEnd = defStyleAttrStart + (bagOff >= 0 ? bagOff : 0);
     BagAttributeFinder defStyleAttrFinder(defStyleAttrStart, defStyleAttrEnd);
@@ -1315,7 +1315,7 @@ static jboolean android_content_AssetManager_applyStyle(JNIEnv* env, jobject cla
     // Retrieve the style class bag, if requested.
     const ResTable::bag_entry* styleAttrStart = NULL;
     uint32_t styleTypeSetFlags = 0;
-    bagOff = style != 0 ? res.getBagLocked(style, &styleAttrStart, &styleTypeSetFlags) : -1;
+    bagOff = style != 0 ? res.getBagLocked(style, &styleEnt, &styleTypeSetFlags) : -1;
     styleTypeSetFlags |= styleBagTypeSetFlags;
     const ResTable::bag_entry* const styleAttrEnd = styleAttrStart + (bagOff >= 0 ? bagOff : 0);
     BagAttributeFinder styleAttrFinder(styleAttrStart, styleAttrEnd);
